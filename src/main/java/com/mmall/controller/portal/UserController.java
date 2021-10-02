@@ -1,4 +1,5 @@
 package com.mmall.controller.portal;
+
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
@@ -71,12 +72,22 @@ public class UserController {
      */
     @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> getUserInfo(HttpSession session){
+    public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-        if(user!=null){
+        if (user != null) {
             return ServerResponse.createBySuccess(user);
         }
         return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户信息");
+    }
+
+
+    /**
+     * 忘记密码：问题获取
+     */
+    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetGetQuestion(String username) {
+        return iUserService.selectQuestion(username);
     }
 
 }

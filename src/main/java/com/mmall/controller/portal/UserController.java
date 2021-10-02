@@ -52,9 +52,17 @@ public class UserController {
     /**
      * 用户注册
      */
-    @RequestMapping(value = "register.do",method = RequestMethod.POST)
+    @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> register(User user){
+    public ServerResponse<String> register(User user) {
         return iUserService.register(user);
     }
+
+    @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> checkValid(String str, String type) {
+        return iUserService.checkValid(str, type);
+    }
+
 }
+

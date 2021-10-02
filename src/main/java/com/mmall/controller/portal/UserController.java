@@ -1,12 +1,4 @@
 package com.mmall.controller.portal;
-
-/**
- * @Description
- * @Author Jessica
- * @Version v
- * @Date 2021/10/2
- */
-
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
@@ -18,6 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
+/**
+ * @Description
+ * @Author Jessica
+ * @Version v
+ * @Date 2021/10/2
+ */
 
 @Controller
 @RequestMapping("/user/")
@@ -42,7 +41,7 @@ public class UserController {
     /**
      * 退出登录
      */
-    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
@@ -58,10 +57,26 @@ public class UserController {
         return iUserService.register(user);
     }
 
+    /**
+     * 校验用户名/邮箱是否已存在
+     */
     @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str, String type) {
         return iUserService.checkValid(str, type);
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getUserInfo(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user!=null){
+            return ServerResponse.createBySuccess(user);
+        }
+        return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户信息");
     }
 
 }

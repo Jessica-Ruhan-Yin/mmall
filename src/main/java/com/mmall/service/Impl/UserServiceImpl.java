@@ -7,19 +7,18 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static com.mmall.common.TokenCache.TOKEN_PREFIX;
 
 /**
  * @Description
  * @Author Jessica
  * @Version v
- * @Date 2021/10/2
+ * @Date 2021/10/3
  */
 @Service("iUserService")
 public class UserServiceImpl implements IUserService {
@@ -34,7 +33,6 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
 
-        //todo 密码登录MD5
         String md5Password = MD5Util.MD5EncodeUtf8(password);
         User user = userMapper.selectLogin(username, md5Password);
         if (user == null) {
@@ -113,7 +111,7 @@ public class UserServiceImpl implements IUserService {
         if (resultCount > 0) {
             //说明问题和问题答案是该用户的且正确
             String forgetToken = UUID.randomUUID().toString();
-            TokenCache.setKey(TOKEN_PREFIX + username, forgetToken);
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题答案错误");
@@ -134,7 +132,7 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("用户不存在");
         }
 
-        String token = TokenCache.getKey(TOKEN_PREFIX + username);
+        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + username);
         if (StringUtils.isBlank(token)) {
             return ServerResponse.createByErrorMessage("token无效或过期");
         }
@@ -147,7 +145,7 @@ public class UserServiceImpl implements IUserService {
                 return ServerResponse.createBySuccessMessage("修改密码成功");
             }
         } else {
-            return ServerResponse.createByErrorMessage("token错误，请重新获取重置密码的token");
+            return ServerResponse.createByErrorMessage("token错误，请重新获取重制密码的token");
         }
         return ServerResponse.createByErrorMessage("修改密码失败");
     }
@@ -194,7 +192,6 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
 
-
     /**
      * 获取用户的详细信息
      */
@@ -206,6 +203,18 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
 
+    }
+
+    //backend
+
+    /**
+     * 校验是否是管理员
+     */
+    public ServerResponse checkAdminRole(User user) {
+        if (user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
     }
 
 }

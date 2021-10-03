@@ -36,15 +36,33 @@ public class ProductManageController {
      */
     @RequestMapping("save.do")
     @ResponseBody
-    public ServerResponse productSave(HttpSession session, Product product){
+    public ServerResponse productSave(HttpSession session, Product product) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-        if(user==null){
+        if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录管理员");
         }
-        if(iUserService.checkAdminRole(user).isSuccess()){
+        if (iUserService.checkAdminRole(user).isSuccess()) {
             //增加产品
             return iProductService.saveORUpdateProduct(product);
-        }else{
+        } else {
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+    }
+
+    /**
+     * 更新产品状态
+     */
+    @RequestMapping("set_sale_status.do")
+    @ResponseBody
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录管理员");
+        }
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            //更新产品状态
+            return iProductService.setSaleStatus(productId, status);
+        } else {
             return ServerResponse.createByErrorMessage("无权限操作");
         }
     }

@@ -38,4 +38,19 @@ public class CartController {
         }
         return iCartService.add(user.getId(), productId, count);
     }
+
+    /**
+     * 更新到购物车
+     */
+    @RequestMapping("update.do")
+    @ResponseBody
+    public ServerResponse<CartVo> update(HttpSession session, Integer count, Integer productId) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.update(user.getId(), productId, count);
+    }
+
+
 }

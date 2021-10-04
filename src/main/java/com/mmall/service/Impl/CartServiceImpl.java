@@ -173,4 +173,14 @@ public class CartServiceImpl implements ICartService {
         return this.list(userId);
     }
 
+    /**
+     * 查询当前用户的购物车里面的产品数量
+     */
+    public ServerResponse<Integer> getCartProductCount(Integer userId){
+        if(userId == null){
+            return ServerResponse.createBySuccess(0);
+        }
+        return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
+    }
+
 }

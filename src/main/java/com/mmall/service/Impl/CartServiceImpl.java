@@ -39,7 +39,7 @@ public class CartServiceImpl implements ICartService {
     /**
      * 添加到购物车
      */
-    public ServerResponse<CartVo> add(Integer userId, Integer count, Integer productId) {
+    public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
         if (productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
@@ -55,7 +55,7 @@ public class CartServiceImpl implements ICartService {
             cartMapper.insert(cartItem);
         } else {
             //该产品已存在购物车中，数量相加
-            count += cart.getQuantity();
+            count = cart.getQuantity() + count;
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
@@ -70,8 +70,7 @@ public class CartServiceImpl implements ICartService {
         BigDecimal cartTotalPrice = new BigDecimal("0");
 
         if (!CollectionUtils.isEmpty(cartList)) {
-            for (Cart cartItem :
-                    cartList) {
+            for (Cart cartItem : cartList) {
                 CartProductVo cartProductVo = new CartProductVo();
                 cartProductVo.setId(cartItem.getId());
                 cartProductVo.setUserId(userId);
@@ -85,9 +84,8 @@ public class CartServiceImpl implements ICartService {
                     cartProductVo.setProductStatus(product.getStatus());
                     cartProductVo.setProductPrice(product.getPrice());
                     cartProductVo.setProductStock(product.getStock());
-
                     //判断库存
-                    int buyLimitCount;
+                    int buyLimitCount = 0;
                     if (product.getStock() >= cartItem.getQuantity()) {
                         //库存充足的时候
                         buyLimitCount = cartItem.getQuantity();
@@ -118,7 +116,8 @@ public class CartServiceImpl implements ICartService {
         cartVo.setCartProductVoList(cartProductVoList);
         cartVo.setAllChecked(this.getAllCheckedStatus(userId));
         cartVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
-        return null;
+
+        return cartVo;
     }
 
     private boolean getAllCheckedStatus(Integer userId) {
@@ -131,7 +130,7 @@ public class CartServiceImpl implements ICartService {
     /**
      * 更新到购物车
      */
-    public ServerResponse<CartVo> update(Integer userId, Integer count, Integer productId) {
+    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
         if (productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
@@ -141,7 +140,6 @@ public class CartServiceImpl implements ICartService {
         }
         cartMapper.updateByPrimaryKey(cart);
         return this.list(userId);
-
     }
 
     /**
@@ -168,16 +166,16 @@ public class CartServiceImpl implements ICartService {
     /**
      * 全选
      */
-    public ServerResponse<CartVo> selectOrUnselect(Integer userId, Integer productId, Integer checked) {
-        cartMapper.checkedOrUncheckedProduct(userId, productId, checked);
+    public ServerResponse<CartVo> selectOrUnSelect(Integer checked, Integer userId, Integer productId) {
+        cartMapper.checkedOrUncheckedProduct(checked, userId, productId);
         return this.list(userId);
     }
 
     /**
      * 查询当前用户的购物车里面的产品数量
      */
-    public ServerResponse<Integer> getCartProductCount(Integer userId){
-        if(userId == null){
+    public ServerResponse<Integer> getCartProductCount(Integer userId) {
+        if (userId == null) {
             return ServerResponse.createBySuccess(0);
         }
         return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));

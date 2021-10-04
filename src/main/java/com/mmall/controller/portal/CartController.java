@@ -86,7 +86,7 @@ public class CartController {
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnselect(user.getId(), null, Const.Cart.CHECKED);
+        return iCartService.selectOrUnSelect(Const.Cart.CHECKED, user.getId(), null);
     }
 
     //全反选
@@ -97,7 +97,7 @@ public class CartController {
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnselect(user.getId(), null, Const.Cart.UN_CHECKED);
+        return iCartService.selectOrUnSelect(Const.Cart.UN_CHECKED, user.getId(), null);
     }
 
     //单独选
@@ -108,7 +108,7 @@ public class CartController {
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnselect(user.getId(), productId, Const.Cart.CHECKED);
+        return iCartService.selectOrUnSelect(Const.Cart.CHECKED, user.getId(), productId);
     }
 
     //单独反选
@@ -119,7 +119,7 @@ public class CartController {
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnselect(user.getId(), productId, Const.Cart.UN_CHECKED);
+        return iCartService.selectOrUnSelect(Const.Cart.UN_CHECKED, user.getId(), productId);
     }
 
 

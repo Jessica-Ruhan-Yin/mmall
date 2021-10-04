@@ -160,7 +160,7 @@ public class CartServiceImpl implements ICartService {
     /**
      * 查询购物车中商品数量
      */
-    public ServerResponse<CartVo> list(Integer userId){
+    public ServerResponse<CartVo> list(Integer userId) {
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
     }
@@ -168,8 +168,8 @@ public class CartServiceImpl implements ICartService {
     /**
      * 全选
      */
-    public ServerResponse<CartVo> selectOrUnselectAll(Integer userId, Integer checked){
-        cartMapper.checkedOrUncheckedAllProduct(userId,checked);
+    public ServerResponse<CartVo> selectOrUnselect(Integer userId, Integer productId, Integer checked) {
+        cartMapper.checkedOrUncheckedProduct(userId, productId, checked);
         return this.list(userId);
     }
 

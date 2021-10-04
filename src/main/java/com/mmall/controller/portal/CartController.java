@@ -55,9 +55,9 @@ public class CartController {
     /**
      * 从购物车删除
      */
-    @RequestMapping("delete.do")
+    @RequestMapping("delete_product.do")
     @ResponseBody
-    public ServerResponse<CartVo> delete(HttpSession session, String productIds) {
+    public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
@@ -78,5 +78,25 @@ public class CartController {
         return iCartService.list(user.getId());
     }
 
+    //全选
+    @RequestMapping("select_all.do")
+    @ResponseBody
+    public ServerResponse<CartVo> selectAll(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.selectOrUnselectAll(user.getId(), Const.Cart.CHECKED);
+    }
 
+    //全反选
+    @RequestMapping("un_select_all.do")
+    @ResponseBody
+    public ServerResponse<CartVo> unSelectAll(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.selectOrUnselectAll(user.getId(), Const.Cart.UN_CHEKED);
+    }
 }

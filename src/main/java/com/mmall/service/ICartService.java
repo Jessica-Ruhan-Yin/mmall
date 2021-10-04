@@ -18,4 +18,6 @@ public interface ICartService {
     ServerResponse<CartVo> delete(Integer userId, String productIds);
 
     ServerResponse<CartVo> list(Integer userId);
+
+    ServerResponse<CartVo> selectOrUnselectAll(Integer userId, Integer checked);
 }

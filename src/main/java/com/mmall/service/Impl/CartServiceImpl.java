@@ -159,4 +159,12 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartVo);
 
     }
+
+    /**
+     * 查询购物车中商品数量
+     */
+    public ServerResponse<CartVo> list(Integer userId){
+        CartVo cartVo = this.getCartVoLimit(userId);
+        return ServerResponse.createBySuccess(cartVo);
+    }
 }

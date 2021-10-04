@@ -65,5 +65,18 @@ public class CartController {
         return iCartService.delete(user.getId(), productIds);
     }
 
+    /**
+     * 查询购物车中商品数量
+     */
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServerResponse<CartVo> list(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.list(user.getId());
+    }
+
 
 }

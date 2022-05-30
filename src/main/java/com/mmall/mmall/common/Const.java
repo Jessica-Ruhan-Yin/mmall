@@ -1,4 +1,4 @@
-package com.mmall.common;
+package com.mmall.mmall.common;
 
 import com.google.common.collect.Sets;
 
@@ -8,7 +8,7 @@ import java.util.Set;
  * @Description
  * @Author Jessica
  * @Version v
- * @Date 2021/10/2
+ * @Date 2021/10/3
  */
 public class Const {
 
@@ -144,4 +144,8 @@ public class Const {
         }
 
     }
+
+
+
+
 }

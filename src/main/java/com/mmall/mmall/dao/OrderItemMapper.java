@@ -1,4 +1,4 @@
-package com.mmall.dao;
+package com.mmall.mmall.dao;
 
 import com.mmall.pojo.OrderItem;
 import org.apache.ibatis.annotations.Param;
